@@ -14,6 +14,12 @@ const mongo = Mongoose.connect(mongoConfig.mongoDB_ConnectionString, {
   useMongoClient: true
 });
 
+const ViewSchema = Mongoose.Schema({
+    postId: Number,
+    views: Number,
+  });
+
+  const View = Mongoose.model('views', ViewSchema);
 
 const db = new Sequelize('blog', null, null, {
   dialect: 'sqlite',
@@ -45,11 +51,17 @@ db.sync({ force: true }).then(() => {
         title: `A post by ${author.firstName}`,
         text: casual.sentences(3),
       });
-    });
+    }).then((post) => { // <- the new part starts here
+        // create some View mocks
+        return View.update(
+          { postId: post.id },
+          { views: casual.integer(0, 100) },
+          { upsert: true });
+      });
   });
 });
 
 const Author = db.models.author;
 const Post = db.models.post;
 
-export { Author, Post };
+export { Author, Post, View };
