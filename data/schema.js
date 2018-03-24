@@ -17,6 +17,7 @@ type Post {
   author: Author
 }
 
+
 type Query {
   author(firstName: String, lastName: String): Author
   allAuthors: [Author]
