@@ -3,6 +3,7 @@ import casual from 'casual';
 import _ from 'lodash';
 import Mongoose from 'mongoose';
 import mongoConfig from './mongo.config.json'
+import fetch from 'node-fetch';
 
 /* import console from 'console';
 const myConsole = new console.Console(process.stdout, process.stderr);
@@ -20,6 +21,16 @@ const ViewSchema = Mongoose.Schema({
   });
 
   const View = Mongoose.model('views', ViewSchema);
+
+  const FortuneCookie = {
+    getOne() {
+      return fetch('http://fortunecookieapi.herokuapp.com/v1/cookie')
+        .then(res => res.json())
+        .then(res => {
+          return res[0].fortune.message;
+        });
+    },
+  };
 
 const db = new Sequelize('blog', null, null, {
   dialect: 'sqlite',
@@ -64,4 +75,4 @@ db.sync({ force: true }).then(() => {
 const Author = db.models.author;
 const Post = db.models.post;
 
-export { Author, Post, View };
+export { Author, Post, View, FortuneCookie };
